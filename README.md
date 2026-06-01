@@ -1,3 +1,28 @@
+# Инструкция по запуску
+## Сборка образов
+docker-compose build --no-cache
+## Запуск сервисов в фоновом режиме
+docker-compose up -d
+## Создание Kafka-топика
+docker-compose exec kafka kafka-topics --create ^
+--topic csv-topic ^
+--bootstrap-server localhost:9092 ^
+--partitions 1 ^
+--replication-factor 1
+## Список топиков
+docker-compose exec kafka kafka-topics --list ^
+--bootstrap-server localhost:9092
+## Запуск Flink-job в фоне
+docker-compose exec -d jobmanager flink run -py /opt/flink/jobs/job.py
+## Запуск Producer для отправки данных
+docker-compose --profile manual run --rm producer
+## Логи Flink
+docker-compose logs -f jobmanager
+docker-compose logs taskmanager | tail -50
+## Остановка и удаление контейнеров
+docker-compose down -v
+docker system prune -a
+
 # BigDataFlink
 Анализ больших данных - лабораторная работа №3 - Streaming processing с помощью Flink
 
