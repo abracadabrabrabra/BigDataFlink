@@ -4,23 +4,42 @@ docker-compose build --no-cache
 ## Запуск сервисов в фоновом режиме
 docker-compose up -d
 ## Создание Kafka-топика
-docker-compose exec kafka kafka-topics --create ^
---topic csv-topic ^
---bootstrap-server localhost:9092 ^
---partitions 1 ^
+docker-compose exec kafka kafka-topics --create ^  
+--topic csv-topic ^  
+--bootstrap-server localhost:9092 ^  
+--partitions 1 ^  
 --replication-factor 1
 ## Список топиков
-docker-compose exec kafka kafka-topics --list ^
+docker-compose exec kafka kafka-topics --list ^  
 --bootstrap-server localhost:9092
 ## Запуск Flink-job в фоне
 docker-compose exec -d jobmanager flink run -py /opt/flink/jobs/job.py
 ## Запуск Producer для отправки данных
 docker-compose --profile manual run --rm producer
-## Логи Flink
-docker-compose logs -f jobmanager
-docker-compose logs taskmanager | tail -50
+## Flink UI
+http://localhost:8081/
+## Kafka UI
+http://localhost:8080/
+## Postgres
+docker-compose exec postgres psql -U admin -d sales_warehouse  
+
+SELECT 'dim_customer' as table_name, COUNT(*) as row_count FROM dim_customer  
+UNION ALL  
+SELECT 'dim_seller', COUNT(*) FROM dim_seller  
+UNION ALL  
+SELECT 'dim_store', COUNT(*) FROM dim_store  
+UNION ALL  
+SELECT 'dim_supplier', COUNT(*) FROM dim_supplier  
+UNION ALL  
+SELECT 'dim_product', COUNT(*) FROM dim_product  
+UNION ALL  
+SELECT 'dim_pet', COUNT(*) FROM dim_pet  
+UNION ALL  
+SELECT 'dim_date', COUNT(*) FROM dim_date  
+UNION ALL  
+SELECT 'fact_sales', COUNT(*) FROM fact_sales;  
 ## Остановка и удаление контейнеров
-docker-compose down -v
+docker-compose down -v  
 docker system prune -a
 
 # BigDataFlink

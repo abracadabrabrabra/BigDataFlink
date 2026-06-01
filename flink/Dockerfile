@@ -15,10 +15,17 @@ RUN pip3 install --no-cache-dir \
     apache-flink==1.19.0 \
     protobuf \
     google \
-    kafka-python
+    kafka-python \
+    psycopg2-binary
 
 RUN wget -P /opt/flink/lib \
     https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.2.0-1.19/flink-sql-connector-kafka-3.2.0-1.19.jar
+
+RUN wget -P /opt/flink/lib \
+    https://jdbc.postgresql.org/download/postgresql-42.7.3.jar
+
+RUN wget -P /opt/flink/lib \
+    https://repo1.maven.org/maven2/org/apache/flink/flink-connector-jdbc/3.2.0-1.19/flink-connector-jdbc-3.2.0-1.19.jar
 
 RUN mkdir -p /opt/flink/jobs
 
